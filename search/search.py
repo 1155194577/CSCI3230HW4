@@ -77,41 +77,123 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
-    """ 
-    Question 1: Search the deepest nodes in the search tree first.
+    def dfs_iterative(problem):
+        stack = util.Stack()
+        start = problem.getStartState()
+        stack.push((start, []))  # Push a tuple (state, path)
+        visited = set()
+        visited.add(start)
+        
+        while not stack.isEmpty():
+            try:
+                state, path = stack.pop()
+                if problem.isGoalState(state):
+                    print("Goal is found", state)
+                    print("Path is", path)
+                    return path
+                 
+                for successor, action, cost in problem.getSuccessors(state):
+                    if successor not in visited:
+                        visited.add(successor)
+                        new_path = path + [action]
+                        stack.push((successor, new_path))
+            except Exception as e:
+                print(f"Error: {e}")
+                pass
+        
+        print("No path found")
+        return []
 
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
-
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-
-    You only need to submit this file. Do not change other files!
-    If you finish this function, you almost finish all the questions!
-    Read util.py to find suitable data structure!
-    All you need is pass all the code in commands.txt
-    """
-
-    # SOLUTION 1 iterative function
-    "*** YOUR CODE HERE ***"
-    # SOLUTION 1 recursive function
-    "*** YOUR CODE HERE ***"
-
+    def depthFirstSearch(problem):
+        return dfs_iterative(problem)
+     
+    ## recursive approach 
+    visited = set()
+    def dfs_recursive(state): 
+        print("State is", state) 
+        if problem.isGoalState(state):
+            return []
+        try:
+            negibours = problem.getSuccessors(state)
+        except:
+            negibours = []
+        for successor, action, cost in negibours:
+            if successor not in visited:
+                visited.add(successor)
+                new_path = dfs_recursive(successor)
+                if new_path is not None:
+                    return [action] + new_path
+    result = dfs_recursive(problem.getStartState())
+    return result
 
 def breadthFirstSearch(problem):
     """Question 2: Search the shallowest nodes in the search tree first."""
 
     "*** YOUR CODE HERE ***"
-
+    queue = util.Queue()
+    start = problem.getStartState()
+    queue.push((start, []))  # Push a tuple (state, path)
+    new_path =  []
+    visited = set()
+    while not queue.isEmpty(): 
+        state, path = queue.pop()
+        print("State is", state)
+        if problem.isGoalState(state):
+            return path
+        try:
+            neighbours = problem.getSuccessors(state)
+        except:
+            neighbours = []
+        for successor, action, cost in neighbours:
+            if successor not in visited:
+                visited.add(successor)
+                new_path = path + [action]
+                queue.push((successor, new_path))
+    return new_path 
 
 def uniformCostSearch(problem):
-    """Question 3: Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+    """Search the node of least total cost first."""
+    
+    def UCS(state):
+        # Priority queue to store nodes with their cumulative costs
+        cost_map = util.Counter()
+        Q = util.PriorityQueue()
+        Q.push((start,[]),0)  # [(state,path), cost]
+        visited = set()
 
+        while not Q.isEmpty():
+            # Pop the node with the lowest cost
+            # state, total_cost, path = Q.pop()
+            vertex,path = Q.pop()
+            # If the state has already been visited, skip it
+            if vertex in visited:
+                continue
+
+            # Mark the state as visited
+            visited.add(vertex)
+
+            # Check if we reached the goal state
+            if problem.isGoalState(vertex):
+                return path  # Return the path to the goal
+
+            # Expand the node and get successors
+            try:
+                successors = problem.getSuccessors(vertex)
+            except:
+                successors = []
+
+            for successor, action, cost in successors:
+                new_cost = cost_map[vertex] + cost
+                new_path = path + [action]
+                
+                # Push the successor into the priority queue with its new cost
+                Q.push((successor, new_path),new_cost)
+
+        return []  # Return an empty list if no path is found
+    
+    start = problem.getStartState()
+    actions = UCS(start)
+    return actions
 
 def nullHeuristic(state, problem=None):
     """

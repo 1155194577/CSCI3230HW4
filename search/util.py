@@ -141,10 +141,12 @@ class Stack:
 
     def push(self,item):
         "Push 'item' onto the stack"
+        print("pushed",item)
         self.list.append(item)
 
     def pop(self):
         "Pop the most recently pushed item from the stack"
+        print("poped",self.list[-1])
         return self.list.pop()
 
     def isEmpty(self):
@@ -186,9 +188,10 @@ class PriorityQueue:
         entry = (priority, self.count, item)
         heapq.heappush(self.heap, entry)
         self.count += 1
-
+        print("pushed",item)
     def pop(self):
         (_, _, item) = heapq.heappop(self.heap)
+        print("poped",item)
         return item
 
     def isEmpty(self):

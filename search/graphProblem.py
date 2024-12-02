@@ -111,6 +111,15 @@ def testDFS():
     problem = read_graph(filename='test_cases/extra/g1.txt')
     dfs(problem)
 
+def testBFS():
+    problem = read_graph(filename='test_cases/extra/g1.txt')
+    bfs(problem)    
+
+def testUFS():
+    problem = read_graph(filename='test_cases/extra/g1.txt')
+    ucs(problem) 
 if __name__ == '__main__':
-    #test_create()
-    testDFS()
+    # test_create()
+    # testDFS()
+    # testBFS()
+    testUFS()
